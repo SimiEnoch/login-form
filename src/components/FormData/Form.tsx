@@ -5,10 +5,11 @@ import { useState } from "react";
 import "./Form.css";
 import backgroundImage from "./backgroundImage.jpg"; // Import the background image
 import { FcGoogle } from "react-icons/fc";
+import { FaCheck } from "react-icons/fa";
 
 const Form = () => {
   const schema = yup.object().shape({
-    fullName: yup.string().required("Full name field is required"),
+    // fullName: yup.string().required("Full name field is required"),
     email: yup.string().email().required("Email field is required"),
     Password: yup
       .string()
@@ -36,26 +37,39 @@ const Form = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+
+  const handlePasswordToggle = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handlePasswordChange = (e: any) => {
+    setPassword(e.target.value);
+  };
   return (
     <div className="container">
       <div className="form-container">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="imageStyle">
-            <img
-              alt="ddd"
-              src={backgroundImage}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: "50%",
-              }}
-            />
-            <p className="image-text">Carsons</p>
-          </div>
+        <div className="imageStyle">
+          <img
+            alt="ddd"
+            src={backgroundImage}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: "50%",
+            }}
+          />
+          <p className="image-text"></p>
+          <h2 className="header-style"> Carsons </h2>
+          <p className="carsons-login-p">
+            Please sign in to continue... We've got you covered.
+          </p>
+        </div>
 
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="">
-            <h4 className="header-style">Please sign up to continue...</h4>
-            <label htmlFor="email" className="form-label">
+            {/* <label htmlFor="email" className="form-label">
               Name
             </label>
             <input
@@ -63,10 +77,10 @@ const Form = () => {
               className="form-control input-style"
               placeholder="Full Name..."
               {...register("fullName")}
-            />
-            <p className="text-danger">{errors.fullName?.message}</p>
+            /> */}
+            {/* <p className="text-danger">{errors.fullName?.message}</p> */}
             <label htmlFor="email" className="form-label">
-              Email
+              Email address
             </label>
             <input
               type="text"
@@ -74,17 +88,38 @@ const Form = () => {
               placeholder="Email..."
               {...register("email")}
             />
-            <p className="text-danger">{errors.email?.message}</p>
+            <p className="text-danger error-message-text">
+              {errors.email?.message}
+            </p>
             <label htmlFor="name" className="form-label">
               Password
             </label>
+
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
+              id="password"
               className="form-control input-style"
               placeholder="Password..."
+              value={password}
               {...register("Password")}
+              onChange={handlePasswordChange}
             />
-            <p className="text-danger">{errors.Password?.message}</p>
+            <p className="text-danger error-message-text">
+              {errors.Password?.message}
+            </p>
+            <div className="tick-button-div">
+              <button
+                type="button"
+                className={`show-password-btn ${showPassword ? "" : "active"}`}
+                onClick={handlePasswordToggle}
+              >
+                <FaCheck className="tick-icon" />
+              </button>
+              {showPassword ? "Hide Password" : "Show Password"}
+            </div>
+
+          
+
             <button className="btn btn-primary submit-button-style">
               Submit
             </button>
@@ -93,7 +128,7 @@ const Form = () => {
               <span className="or-line-text">Or</span>
             </div>
             <button className="btn btn-danger submit-button-style">
-              <FcGoogle /> Sign Up with Google
+              <FcGoogle /> Sign In With Google
             </button>
           </div>
         </form>
